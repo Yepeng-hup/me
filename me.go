@@ -12,12 +12,13 @@ var (
 )
 
 func main(){
-	global.InitJsonFile(jsonPath)
+	core.InitJsonFile(jsonPath)
 	r := route.InitRoute()
 	err := core.CreateMeAllTable()
 	if err != nil{
 		log.Fatal(err)
 	}
+
 	if err := r.Run(global.Cfg.Me.Ip+":"+global.Cfg.Me.Port); err != nil {
 		log.Println("ERROR: error start fail", err)
 	}
