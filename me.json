@@ -1,0 +1,15 @@
+{
+  "me": {
+    "ip": "127.0.0.1",
+    "port": "7070",
+    "upload_ip_domain": "127.0.0.1",
+    "log_info": "",
+    "log_error": "",
+    "log_warn": ""
+  },
+
+  "elasticsearch": {
+    "ip": "192.168.87.182",
+    "port": "9200"
+  }
+}
