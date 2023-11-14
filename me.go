@@ -2,12 +2,23 @@ package main
 
 import (
 	"log"
+	"me/core"
+	"me/global"
 	"me/route"
 )
 
+var (
+	jsonPath = "me.json"
+)
+
 func main(){
+	global.InitJsonFile(jsonPath)
 	r := route.InitRoute()
-	if err := r.Run("127.0.0.1:7070"); err != nil {
+	err := core.CreateMeAllTable()
+	if err != nil{
+		log.Fatal(err)
+	}
+	if err := r.Run(global.Cfg.Me.Ip+":"+global.Cfg.Me.Port); err != nil {
 		log.Println("ERROR: error start fail", err)
 	}
 }
