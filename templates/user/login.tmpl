@@ -1,0 +1,30 @@
+{{define "login.tmpl"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ME Login</title>
+        <link rel="stylesheet" href="/sta/css/login.css">
+    </head>
+    <body>
+
+    <div class="login-container">
+        <h2 style="color: #333">ME</h2>
+        <form class="login-form" action="/user/login" method="post">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <button type="submit" class="login-btn">登录</button>
+        </form>
+        <p style="color: red">{{.error}}</p>
+    </div>
+
+    </body>
+    </html>
+{{end}}

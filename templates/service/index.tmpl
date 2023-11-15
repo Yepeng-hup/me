@@ -1,0 +1,40 @@
+{{define "index.tmpl"}}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>首页</title>
+    </head>
+
+    {{template "base" .}}
+
+    <body>
+        <div style="padding:10px;">
+            <button class="button tiny" data-reveal-id="updatePwd" type="button">密码修改</button>
+
+            <div class="reveal-modal small" data-reveal id="updatePwd">
+                <h5 style="text-align: center">密码修改</h5>
+                <form action="/svc/user/update" method="post">
+                    <div class="row">
+                        <div class="small-10 columns">
+                            <label>密码
+                                <input name="ypwd" type="password" id="ypwd">
+                            </label>
+                            <label>确认密码
+                                <input name="epwd" type="password" id="epwd">
+                            </label>
+                            <button style="float: right" class="button tiny" type="submit">确认</button>
+                        </div>
+                    </div>
+                </form>
+                <a class="close-reveal-modal">&times;</a>
+            </div>
+
+
+        </div>
+
+
+
+
+    </body>
+    </html>
+{{end}}
