@@ -3,9 +3,9 @@
     "ip": "127.0.0.1",
     "port": "7070",
     "upload_ip_domain": "127.0.0.1",
-    "log_info": "",
-    "log_error": "",
-    "log_warn": ""
+    "log_info": "log/me-info.log",
+    "log_error": "log/me-error.log",
+    "log_warn": "log/me-warn.log"
   },
 
   "elasticsearch": {
