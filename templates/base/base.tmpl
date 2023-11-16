@@ -6,6 +6,40 @@
         <script src="/sta/js/jstools/jquery-2.1.1.min.js"></script>
         <script src="/sta/js/jstools/foundation.min.js"></script>
         <script src="/sta/js/jstools/modernizr.min.js"></script>
+        <style>
+            a.clicked {
+                color: #008CBA !important;
+            }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var colorChangeLinks = document.querySelectorAll('.colorChangeLink');
+                // 初始化，检查 localStorage 中是否有标记
+                colorChangeLinks.forEach(function(link) {
+                    var isClicked = localStorage.getItem(link.href);
+                    // 如果已经点击过，添加点击后的样式
+                    if (isClicked) {
+                        link.classList.add('clicked');
+                    }
+                });
+                // 给每个链接添加点击事件监听器
+                colorChangeLinks.forEach(function(link) {
+                    link.addEventListener('click', function() {
+                        // 清除之前链接的点击标记
+                        colorChangeLinks.forEach(function(otherLink) {
+                            if (otherLink !== link) {
+                                localStorage.removeItem(otherLink.href);
+                                otherLink.classList.remove('clicked');
+                            }
+                        });
+                        // 添加点击后的样式
+                        link.classList.add('clicked');
+                        // 将标记保存到 localStorage
+                        localStorage.setItem(link.href, true);
+                    });
+                });
+            });
+        </script>
     </head>
 
     <body>
@@ -19,9 +53,9 @@
 
         <section class="top-bar-section">
             <ul class="left">
-                <li><a href="/svc/text">文本</a></li>
-                <li><a href="/svc/video">视频</a></li>
-                <li><a href="/svc/pic">图片</a></li>
+                <li><a href="/svc/text" class="colorChangeLink">文本</a></li>
+                <li><a href="/svc/video" class="colorChangeLink">视频</a></li>
+                <li><a href="/svc/pic" class="colorChangeLink">图片</a></li>
                 <li class="has-dropdown">
                     <a>友情链接</a>
                     <ul class="dropdown">
@@ -35,7 +69,6 @@
         </section>
     </nav>
 
-    <!-- 初始化 Foundation JS -->
     <script>
         $(document).ready(function() {
             $(document).foundation();
