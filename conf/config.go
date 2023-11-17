@@ -13,6 +13,7 @@ type (
 	Elasticsearch struct {
 		Ip string `json:"ip"`
 		Port string `json:"port"`
+		Ssl string `json:"ssl"`
 	}
 
 	Config struct {
