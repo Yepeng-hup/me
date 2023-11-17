@@ -3,14 +3,117 @@
     <html>
     <head>
         <title>文本</title>
+        <script src="/sta/js/text.js"></script>
     </head>
 
     {{template "base" .}}
 
     <body>
-    <div style="padding:10px;">
-        文本爬虫
-    </div>
+    {{/*<h5 style="padding:10px; color: #4d4d4d">文本爬虫</h5>*/}}
+        <div style="padding:10px;">
+            <div class="large-6 columns">
+                <form action="/svc/text/crawling" method="post">
+                    <div>
+                            <label for="name">爬取网址
+                                <input id="url" name="url" placeholder="https://xxxx.xxxx.xxx" type="text">
+                            </label>
+                            <label for="name" style="width: 50%">存储选项
+                                <select id="savenum" name="savenum" onchange="updateFormVisibility()">
+                                    <option>本地存储</option>
+                                    <option>elasticsearch</option>
+                                </select>
+                            </label>
+                    </div>
+
+                    <div id="localForm">
+                            <label for="name">保存路径
+                                <input id="localpath" name="localpath" placeholder="/data/me/text.txt" type="text">
+                            </label>
+                    </div>
+
+                    <div id="elasticsearchForm">
+                            <label for="num" style="width: 50%">ES 索引选择
+                                <select id="esindex" name="esindex">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                </select>
+                            </label>
+                    </div>
+                    <label for="name">参数1
+                        <input id="c1" name="c1" placeholder="1" type="text">
+                    </label>
+                    <label for="name">参数2
+                        <input id="c2" name="c2" placeholder="2" type="text">
+                    </label>
+                    <label for="name" style="width: 50%">记录是否保存
+                        <select id="hissave" name="hissave">
+                            <option>否</option>
+                            <option>是</option>
+                        </select>
+                    </label>
+                    <button style="float: right;" class="button tiny" type="submit">开始爬取</button>
+                    <a href="/svc/text/record"><button style="float: right; margin-right: 10px" class="button tiny success" type="button">查看所有记录</button></a>
+                </form>
+            </div>
+
+
+            <div class="large-6 columns">
+                <from>
+                    <label for="name">新建ES索引
+                        <input id="name" placeholder="es index" type="text">
+                    </label>
+                </from>
+                <button style="float: right;" class="button tiny" type="submit">新建</button>
+                <button style="float: right;margin-right: 10px" class="button tiny" type="submit">检测ES</button>
+                <hr>
+                {{/*<table>*/}}
+                    {{/*<thead>*/}}
+                    {{/*<tr>*/}}
+                        {{/*<th>时间</th>*/}}
+                        {{/*<th>类别</th>*/}}
+                        {{/*<th>网址</th>*/}}
+                    {{/*</tr>*/}}
+                    {{/*</thead>*/}}
+                    {{/*<tbody>*/}}
+                    {{/*<tr>*/}}
+                        {{/*<td>2025-3-4 6:02</td>*/}}
+                        {{/*<td>文本</td>*/}}
+                        {{/*<td>https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_10005623621655836922%22%7D&n_type=1&p_from=4</td>*/}}
+                    {{/*</tr>*/}}
+                    {{/*<tr>*/}}
+                        {{/*<td>2023-3-5 10:19</td>*/}}
+                        {{/*<td>视频</td>*/}}
+                        {{/*<td>https://fffffffff/ffffffffff</td>*/}}
+                    {{/*</tr>*/}}
+                    {{/*</tbody>*/}}
+                {{/*</table>*/}}
+            </div>
+
+        </div>
+
+        <script>
+            function updateFormVisibility() {
+                // 获取选择框的值
+                var selectedOption = document.getElementById("savenum").value;
+
+                // 隐藏所有表单
+                document.getElementById("localForm").style.display = "none";
+                document.getElementById("elasticsearchForm").style.display = "none";
+
+                // 根据选择的值显示相应的表单
+                if (selectedOption === "本地存储") {
+                    document.getElementById("localForm").style.display = "block";
+                } else if (selectedOption === "elasticsearch") {
+                    document.getElementById("elasticsearchForm").style.display = "block";
+                }
+            }
+            window.onload = function() {
+                document.getElementById("savenum").value = "本地存储";
+                updateFormVisibility();
+            };
+        </script>
     </body>
     </html>
 {{end}}
