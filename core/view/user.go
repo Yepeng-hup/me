@@ -77,6 +77,12 @@ func PwdUpdate(c *gin.Context){
 		password02: c.PostForm("epwd"),
 	}
 
+	if p.password01 == "" || p.password02 == "" {
+		logs.Errorf("password input nill.")
+		c.Redirect(http.StatusFound, "/svc/index")
+		return
+	}
+
 	if p.password01 != p.password02 {
 		 logs.Errorf("password Inconsistent input,password update fail.")
 		c.Redirect(http.StatusFound, "/svc/index")
