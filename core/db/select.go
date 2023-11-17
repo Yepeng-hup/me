@@ -22,18 +22,18 @@ func SelectSetUser(){
 	database,err := ConnDb()
 	var user User
 	if err != nil {
-		lo.Fatal(err.Error())
+		lo.Println(err.Error())
 	}
 	sql := "SELECT * FROM user  WHERE userName = ?"
 	rows, err := database.Query(sql, "me")
 	if err != nil {
-		lo.Fatal("query user table fail,",err.Error())
+		lo.Println("query user table fail,",err.Error())
 	}
 	defer rows.Close()
 	for rows.Next(){
 		err := rows.Scan(&user.Id, &user.UserName, &user.Passwd)
 		if err != nil {
-			lo.Fatal(err.Error())
+			lo.Println(err.Error())
 		}
 	}
 
@@ -55,7 +55,7 @@ func SelectUserAndPasswd()User{
 	database,err := ConnDb()
 	var user User
 	if err != nil {
-		lo.Fatal(err.Error())
+		lo.Println(err.Error())
 	}
 	sql := "SELECT * FROM user  WHERE userName = ?"
 	rows, err := database.Query(sql, "me")
@@ -66,7 +66,7 @@ func SelectUserAndPasswd()User{
 	for rows.Next(){
 		err := rows.Scan(&user.Id, &user.UserName, &user.Passwd)
 		if err != nil {
-			lo.Fatal(err.Error())
+			lo.Println(err.Error())
 		}
 	}
 	return user
@@ -78,18 +78,18 @@ func SelectTextRecord()[]Record{
 	var record Record
 	recordList := make([]Record, 0)
 	if err != nil {
-		lo.Fatal(err.Error())
+		lo.Println(err.Error())
 	}
 	sql := "SELECT * FROM p_text_record"
 	rows, err := database.Query(sql, "")
 	if err != nil {
-		lo.Fatal("query p_text_record table fail,",err.Error())
+		lo.Println("query p_text_record table fail,",err.Error())
 	}
 	defer rows.Close()
 	for rows.Next(){
 		err := rows.Scan(&record.Date, &record.Url)
 		if err != nil {
-			lo.Fatal(err.Error())
+			lo.Println(err.Error())
 		}
 		recordList = append(recordList, record)
 	}

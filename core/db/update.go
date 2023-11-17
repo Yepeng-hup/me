@@ -9,7 +9,7 @@ import (
 func UpdateMePasswd(passwd string)error{
 	database,err := ConnDb()
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Println(err.Error())
 	}
 
 	stmt, err := database.Prepare("UPDATE user SET password = ? WHERE userName = ?")
