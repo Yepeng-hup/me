@@ -8,7 +8,7 @@ import (
 	"me/core/logs"
 )
 
-var tableList = []string{"user",}
+var tableList = []string{"user", "p_text_record"}
 
 func checkTableIfCreate()[]string{
 	t := make([]string , 0)
@@ -54,7 +54,17 @@ func CreateMeAllTable(){
 				createUserTable := `CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, userName TEXT, password TEXT);`
 				_, err = database.Exec(createUserTable)
 				if err != nil {
-					log.Fatal("ERROR: create table cron fail,", err.Error())
+					log.Fatal("ERROR: create table user fail,", err.Error())
+				}
+				err = db.SetMeUserAndPasswd()
+				if err != nil {
+					log.Fatal(err.Error())
+				}
+			case "p_text_record":
+				createTextRrcordTable := `CREATE TABLE IF NOT EXISTS p_text_record (use_date TEXT DEFAULT (strftime('%Y-%m-%d %H:%M', 'now', 'localtime')), urlName TEXT);`
+				_, err = database.Exec(createTextRrcordTable)
+				if err != nil {
+					log.Fatal("ERROR: create table p_text_record fail,", err.Error())
 				}
 				err = db.SetMeUserAndPasswd()
 				if err != nil {
