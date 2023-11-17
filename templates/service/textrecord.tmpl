@@ -9,19 +9,23 @@
     {{template "base" .}}
 
     <body >
-        <div>
+        <div style="padding:10px;">
             <table>
                 <thead>
                     <tr>
+                        <th>@</th>
                         <th>时间</th>
                         <th>网址</th>
+                        <th>动作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {{ range $_, $v := .UrlRecord}}
                         <tr>
+                            <td><input class="cb" type="checkbox"/></td>
                             <td>{{$v.Date}}</td>
                             <td>{{$v.Url}}</td>
+                            <td><button class="button tiny alert" onclick="deleteTextRecord()">删除</button></td>
                         </tr>
                     {{end}}
                 </tbody>

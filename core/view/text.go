@@ -9,6 +9,7 @@ import (
 	"me/core/db"
 	"me/core/logs"
 	"net/http"
+	"strings"
 )
 
 type (
@@ -59,7 +60,8 @@ func CrawlingText(c *gin.Context){
 			})
 			err := co.Visit(f.Url)
 			if err != nil {
-				log.Println(err.Error())
+				logs.Errorf(err.Error())
+				c.Redirect(http.StatusFound, "/svc/text")
 				return
 			}
 
@@ -91,8 +93,21 @@ func CrawlingText(c *gin.Context){
 
 func ShowTextRecord(c *gin.Context){
 	record := db.SelectTextRecord()
-	fmt.Println(record)
 	c.HTML(http.StatusOK, "textrecord.tmpl", gin.H{
 		"UrlRecord": record,
 	})
+}
+
+
+func DeleteTextRecord(c *gin.Context){
+	url := c.PostForm("url")
+	urlList := strings.Fields(url)
+	err := db.DelTextRecord(urlList[2])
+	if err != nil {
+		l := fmt.Sprintf("delete text record fail -> [%s].", urlList[2])
+		logs.Errorf(l)
+		return
+	}
+	c.Redirect(http.StatusFound, "/svc/text/record")
+	return
 }
