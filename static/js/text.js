@@ -21,3 +21,23 @@ function deleteTextRecord() {
         }
     }
 }
+
+
+function checkEsConn() {
+    $.ajax({
+        url: '/svc/text/es/ck',
+        type: 'GET',
+        success: function(data) {
+            console.log('Response:', data);
+            if (data["code"] !== 200){
+                alert(data["msg"])
+                return
+            }
+            alert(data["msg"])
+        },
+        error: function(error) {
+            console.error('Error:', error);
+            return
+        }
+    });
+}
