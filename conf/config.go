@@ -16,8 +16,17 @@ type (
 		Ssl string `json:"ssl"`
 	}
 
+	Mongo struct {
+		Ip string `json:"ip"`
+		Port string `json:"port"`
+		DbName string `json:"db_name"`
+		DbUser string `json:"db_user"`
+		DbPaaaword string `json:"db_password"`
+	}
+
 	Config struct {
 		Me Me `json:"me"`
 		Elasticsearch Elasticsearch `json:"elasticsearch"`
+		Mongo Mongo `json:"mongo"`
 	}
 )

@@ -12,5 +12,13 @@
     "ip": "192.168.87.182",
     "port": "9200",
     "ssl": "http"
+  },
+
+  "mongodb": {
+    "ip": "",
+    "port": "",
+    "db_name": "",
+    "db_user": "",
+    "db_password": ""
   }
 }
