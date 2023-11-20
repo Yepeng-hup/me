@@ -19,7 +19,7 @@ func EsConnCheck()bool{
 	// create client req
 	req, err := http.NewRequest("GET", global.Cfg.Elasticsearch.Ssl+"://"+global.Cfg.Elasticsearch.Ip+":"+global.Cfg.Elasticsearch.Port, nil)
 	if err != nil {
-		logs.Errorf("create http request fail.")
+		logs.Errorf("create es http request fail.")
 		return false
 	}
 	resp, err := client.Do(req)
