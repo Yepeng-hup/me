@@ -58,7 +58,7 @@ label {
     border-radius: 4px;
     cursor: pointer;
     transition: background 0.3s ease;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .login-btn:hover {
