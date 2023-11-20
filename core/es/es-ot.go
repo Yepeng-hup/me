@@ -16,7 +16,7 @@ func EsConnCheck()bool{
 	client := &http.Client{
 		Timeout: time.Second * 3,
 	}
-	// 创建一个GET请求
+	// create client req
 	req, err := http.NewRequest("GET", global.Cfg.Elasticsearch.Ssl+"://"+global.Cfg.Elasticsearch.Ip+":"+global.Cfg.Elasticsearch.Port, nil)
 	if err != nil {
 		logs.Errorf("create http request fail.")
@@ -29,7 +29,7 @@ func EsConnCheck()bool{
 	}
 	defer resp.Body.Close()
 
-	// 读取响应内容
+	// read req text
 	//_, err := ioutil.ReadAll(resp.Body)
 	//if err != nil {
 	//	return false
