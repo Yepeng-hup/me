@@ -4,6 +4,7 @@
     <head>
         <title>文本</title>
         <script src="/sta/js/text.js"></script>
+        <script src="/sta/js/jstools/echarts.min.js"></script>
     </head>
 
     {{template "base" .}}
@@ -19,7 +20,7 @@
                             <label for="name" style="width: 50%">存储选项
                                 <select id="savenum" name="savenum" onchange="updateFormVisibility()">
                                     <option>本地存储</option>
-                                    <option>elasticsearch</option>
+                                    <option>MongoDB</option>
                                 </select>
                             </label>
                     </div>
@@ -30,23 +31,12 @@
                             </label>
                     </div>
 
-                    <div id="elasticsearchForm">
-                            <label for="num" style="width: 50%">ES 索引选择
-                                <select id="esindex" name="esindex">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                </select>
+                    <div id="mgForm">
+                            <label for="name">Mongo-标题
+                                <input id="mgtl" name="mgtl" placeholder="nginx部署爬取" type="text">
                             </label>
                     </div>
-                    <label for="name">参数1
-                        <input id="c1" name="c1" placeholder="1" type="text">
-                    </label>
-                    <label for="name">参数2
-                        <input id="c2" name="c2" placeholder="2" type="text">
-                    </label>
-                    <label for="name" style="width: 20%">记录是否保存
+                    <label for="name" style="width: 20%">此次记录是否保存
                         <select id="hissave" name="hissave">
                             <option>否</option>
                             <option>是</option>
@@ -54,19 +44,13 @@
                     </label>
                     <button style="float: right;" class="button tiny" type="submit">开始爬取</button>
                     <a href="/svc/text/record"><button style="float: right; margin-right: 10px" class="button tiny success" type="button">查看所有记录</button></a>
+                    <button style="float: right;margin-right: 10px" class="button tiny warning" type="button" onclick="">检测Mongo</button>
                 </form>
             </div>
 
 
             <div class="large-6 columns">
-                <from>
-                    <label for="name">新建ES索引
-                        <input id="name" placeholder="es index" type="text">
-                    </label>
-                </from>
-                <button style="float: right;" class="button tiny" type="submit">新建</button>
-                <button style="float: right;margin-right: 10px" class="button tiny warning" type="button" onclick="checkEsConn()">检测ES</button>
-                <hr>
+                <div id="main" style="width: 600px;height:400px;"></div>
             </div>
 
         </div>
@@ -78,19 +62,64 @@
 
                 // 隐藏所有表单
                 document.getElementById("localForm").style.display = "none";
-                document.getElementById("elasticsearchForm").style.display = "none";
+                document.getElementById("mgForm").style.display = "none";
 
                 // 根据选择的值显示相应的表单
                 if (selectedOption === "本地存储") {
                     document.getElementById("localForm").style.display = "block";
-                } else if (selectedOption === "elasticsearch") {
-                    document.getElementById("elasticsearchForm").style.display = "block";
+                } else if (selectedOption === "MongoDB") {
+                    document.getElementById("mgForm").style.display = "block";
                 }
             }
             window.onload = function() {
                 document.getElementById("savenum").value = "本地存储";
                 updateFormVisibility();
             };
+        </script>
+
+        <script type="text/javascript">
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('main'));
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: 'Mongo record',
+                    // left: 'center',
+                    // top: 'center'
+                },
+                series: [
+                    {
+                        type: 'pie',
+                        data: [
+                            {
+                                value: 100,
+                                name: 'nginx部署爬取'
+                            },
+                            {
+                                value: 200,
+                                name: '二进制部署K8S'
+                            },
+                            {
+                                value: 200,
+                                name: 'linux常用命令'
+                            },
+                            {
+                                value: 150,
+                                name: '李白古诗'
+                            },
+                            {
+                                value: 50,
+                                name: '辛弃疾的词'
+                            }
+                        ],
+                        roseType: 'area'
+                    }
+                ]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
         </script>
     </body>
     </html>
