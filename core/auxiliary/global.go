@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 )
 
 func IfElement(slice []string, element string) bool {
@@ -27,6 +28,18 @@ func AppendWrite(line, filePath string)error{
 		log.Println("write file error: ",err.Error())
 		return fmt.Errorf("write file error: %s",err.Error())
 	}
+	return nil
+}
+
+
+func GeneratePrefix()string{
+	t := time.Now()
+	return t.Format("2006-01-02 15:04:05")
+}
+
+
+func DeleteF(path string)error{
+
 	return nil
 }
 
