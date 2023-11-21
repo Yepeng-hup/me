@@ -39,7 +39,19 @@ func GeneratePrefix()string{
 
 
 func DeleteF(path string)error{
+	err := os.Remove(path)
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
+	return nil
+}
 
+
+func DeleteD(path string)error{
+	err := os.RemoveAll(path)
+	if err != nil {
+		return fmt.Errorf(err.Error())
+	}
 	return nil
 }
 
