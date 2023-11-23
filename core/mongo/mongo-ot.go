@@ -10,7 +10,6 @@ import (
 
 func MongoConnCheck()bool{
 	address := fmt.Sprintf("%s:%s", global.Cfg.Mongodb.Ip, global.Cfg.Mongodb.Port)
-	fmt.Println(address, global.Cfg.Elasticsearch.Ssl)
 	// new conn
 	conn, err := net.DialTimeout("tcp", address, 3*time.Second)
 	if err != nil {
