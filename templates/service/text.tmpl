@@ -36,6 +36,12 @@
                                 <input id="mgtl" name="mgtl" placeholder="nginx部署爬取" type="text">
                             </label>
                     </div>
+
+
+                    <label for="name">html标签筛选
+                        <textarea id="htmlLable" name="htmlLable" rows="2" placeholder="单个就写单个，多个就加逗号分隔如: p,a,div,table"></textarea>
+                    </label>
+
                     <label for="name" style="width: 20%">此次记录是否保存
                         <select id="hissave" name="hissave">
                             <option>否</option>
@@ -43,8 +49,9 @@
                         </select>
                     </label>
                     <button style="float: right;" class="button tiny" type="submit">开始爬取</button>
+                    <a href="/svc/text/mg/content/list"><button style="float: right; margin-right: 10px" class="button tiny" type="button">TEXT列表</button></a>
                     <a href="/svc/text/record"><button style="float: right; margin-right: 10px" class="button tiny success" type="button">查看所有记录</button></a>
-                    <button style="float: right;margin-right: 10px" class="button tiny warning" type="button" onclick="">检测Mongo</button>
+                    <button style="float: right;margin-right: 10px" class="button tiny warning" type="button" onclick="checkMongoConn()">检测Mongo</button>
                 </form>
             </div>
 
