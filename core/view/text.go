@@ -150,19 +150,18 @@ func DeleteTextRecord(c *gin.Context){
 
 func ShowTextCat(c *gin.Context){
 	t := TextCat{
-		TextTitle: c.PostForm(""),
+		TextTitle: c.Param("titleName"),
 	}
-
+	//tList := strings.Fields(t.TextTitle)
 	fileName,content,err := text.TextRead(t.TextTitle)
 	if err != nil {
 		logs.Errorf(err.Error())
 		c.Redirect(http.StatusFound, "/svc/text")
 		return
 	}
-
 	c.HTML(http.StatusOK, "textcat.tmpl", gin.H{
-		"fileName": fileName,
-		"content": content,
+			"fileName": fileName,
+			"content": content,
 	})
 }
 
