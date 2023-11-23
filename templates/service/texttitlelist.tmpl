@@ -1,0 +1,38 @@
+{{define "texttitlelist.tmpl"}}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>标题列表</title>
+        <script src="/sta/js/text.js"></script>
+    </head>
+
+    {{template "base" .}}
+
+
+    <body>
+        <div style="padding:10px">
+            <table >
+                <thead>
+                <tr>
+                    <th>@</th>
+                    <th>集合标题</th>
+                    <th>动作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{ range $_, $v := .keyName}}
+                    <tr>
+                        <td><input class="cb" type="checkbox"/></td>
+                        <td>{{$v.Name}}</td>
+                        <td>
+                            <button class="button tiny success" onclick="">SHOW</button>
+                            <button class="button tiny alert" onclick="">DELETE</button>
+                        </td>
+                    </tr>
+                {{end}}
+                </tbody>
+            </table>
+        </div>
+    </body>
+    </html>
+{{end}}
