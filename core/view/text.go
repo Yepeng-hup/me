@@ -21,6 +21,9 @@ type (
 		SaveDataMGTitle string
 		SaveRecord string
 	}
+	TextCat struct {
+		TextTitle string
+	}
 
 )
 
@@ -142,4 +145,35 @@ func DeleteTextRecord(c *gin.Context){
 	}
 	c.Redirect(http.StatusFound, "/svc/text/record")
 	return
+}
+
+
+func ShowTextCat(c *gin.Context){
+	t := TextCat{
+		TextTitle: c.PostForm(""),
+	}
+
+	fileName,content,err := text.TextRead(t.TextTitle)
+	if err != nil {
+		logs.Errorf(err.Error())
+		c.Redirect(http.StatusFound, "/svc/text")
+		return
+	}
+
+	c.HTML(http.StatusOK, "textcat.tmpl", gin.H{
+		"fileName": fileName,
+		"content": content,
+	})
+}
+
+
+func ShowAllText(c *gin.Context){
+	k, err := text.ShowTextAllTitle()
+	if err != nil {
+		logs.Errorf(err.Error())
+		return
+	}
+	c.HTML(http.StatusOK, "texttitlelist.tmpl", gin.H{
+		"keyName": k,
+	})
 }
