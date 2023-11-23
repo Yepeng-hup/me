@@ -38,6 +38,8 @@ func InitRoute() *gin.Engine {
 		svc.POST("/text/record/del", middleware.LoginCheck(), view.DeleteTextRecord)
 		svc.GET("/text/es/ck",middleware.LoginCheck(), view.EsConnChecks)
 		svc.GET("/text/mg/ck",middleware.LoginCheck(), view.MgConnChecks)
+		svc.GET("/text/mg/content/select",middleware.LoginCheck(), view.ShowTextCat)
+		svc.GET("/text/mg/content/list", middleware.LoginCheck(),view.ShowAllText)
 
 		svc.GET("/video", middleware.LoginCheck(), view.ShowVideo)
 
