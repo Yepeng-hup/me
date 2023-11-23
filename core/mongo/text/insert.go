@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
-	"io"
+	"io/ioutil"
 	"log"
 	"me/core/logs"
 	"me/core/mongo"
@@ -12,23 +12,13 @@ import (
 	"os"
 )
 
-func fileToBytes(file *os.File) []byte {
-	buf := make([]byte, 51200) // 可以根据实际需求调整缓冲区大小,默认5M
-	var totalBytes int64 = 0
-	for {
-		n, err := file.Read(buf)
-		// 读到文件末尾，退出循环
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			log.Println(err.Error())
-			return nil
-		} else {
-			// n是实际读取到的字节数，totalBytes表示已读的总字节数。如果n为0，表示已经读完整个文件。
-			totalBytes += int64(n)
-		}
+func fileToStr(filePath string) string {
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Println(err.Error())
 	}
-	return buf
+	// 字节切片转换为字符串
+	return string(content)
 }
 
 func TextWrite(filePath, saveTitle string) error {
@@ -49,13 +39,13 @@ func TextWrite(filePath, saveTitle string) error {
 
 	// new mongo obj
 	collection := mg.Database(global.Cfg.Mongodb.DbName).Collection("text")
-	if fileToBytes(file) == nil {
+	if fileToStr(filePath) == "" {
 		return fmt.Errorf("read file -> [%s] error, file is nil.", saveTitle)
 	}
 
 	document := bson.M{
 		"filename": saveTitle,
-		"content":  fileToBytes(file),
+		"content":  fileToStr(filePath),
 		"size":     length,
 	}
 	_, err = collection.InsertOne(context.TODO(), document)

@@ -37,6 +37,7 @@ func TextRead(saveTitle string)(string,string,error){
 	if err != nil {
 		return "","",fmt.Errorf(err.Error())
 	}
+	fmt.Println(mText.Content)
 	return mText.FileName, mText.Content, nil
 }
 
