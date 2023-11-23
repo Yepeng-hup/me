@@ -16,7 +16,6 @@ func IfElement(slice []string, element string) bool {
 	return false
 }
 
-
 func AppendWrite(line, filePath string)error{
 	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
