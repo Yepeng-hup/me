@@ -46,7 +46,7 @@ func CreateMeAllTable(){
 	list := checkTableIfCreate()
 	for _, v := range tableList {
 		if auxiliary.IfElement(list, v) {
-			l := fmt.Sprintf("table -> [%s] Already exists.", v)
+			l := fmt.Sprintf("server start init table -> [%s] Already exists.", v)
 			logs.Warnf(l)
 		}else {
 			switch v {
