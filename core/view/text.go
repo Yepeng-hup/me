@@ -20,6 +20,8 @@ type (
 		SaveDataLocal string
 		SaveDataMGTitle string
 		SaveRecord string
+		HtmlLable string
+		Theme string
 	}
 	TextCat struct {
 		TextTitle string
@@ -28,7 +30,10 @@ type (
 )
 
 func ShowText(c *gin.Context){
-	c.HTML(http.StatusOK, "text.tmpl", gin.H{})
+	themeMap := db.SelectTextTheme()
+	c.HTML(http.StatusOK, "text.tmpl", gin.H{
+		"themeMap": themeMap,
+	})
 }
 
 
@@ -39,6 +44,8 @@ func CrawlingText(c *gin.Context){
 		SaveDataLocal: c.PostForm("localpath"),
 		SaveDataMGTitle: c.PostForm("mgtl"),
 		SaveRecord: c.PostForm("hissave"),
+		HtmlLable: c.PostForm("htmlLable"),
+		Theme:c.PostForm("theme"),
 	}
 
 	if f.Url == "" {
@@ -47,71 +54,150 @@ func CrawlingText(c *gin.Context){
 		return
 	}
 
+	err := db.SetTextTheme(f.Theme)
+	if err != nil {
+		logs.Errorf(err.Error())
+		c.Redirect(http.StatusFound, "/svc/text")
+		return
+	}
+
+	co := colly.NewCollector()
+	strSlice := auxiliary.StrConvertSlice(f.HtmlLable)
+
 	switch f.SaveXz {
 		case "本地存储":
-			co := colly.NewCollector()
-			co.OnHTML("p", func(e *colly.HTMLElement) {
-				//保存到本地文件
-				err := auxiliary.AppendWrite(e.Text, f.SaveDataLocal)
-				if err != nil {
-					logs.Errorf(err.Error())
-					return
-				}
-			})
-			err := co.Visit(f.Url)
-			if err != nil {
-				logs.Errorf(err.Error())
-				c.Redirect(http.StatusFound, "/svc/text")
-				return
-			}
+			if len(strSlice) == 1 {
+				go func(htmlLable string) {
+					co.OnHTML(htmlLable, func(e *colly.HTMLElement) {
+						//保存到本地文件
+						err := auxiliary.AppendWrite(e.Text, f.SaveDataLocal)
+						if err != nil {
+							logs.Errorf(err.Error())
+							return
+						}
+					})
+					err := co.Visit(f.Url)
+					if err != nil {
+						logs.Errorf(err.Error())
+						c.Redirect(http.StatusFound, "/svc/text")
+						return
+					}
 
-			//是否记录此次操作
-			if f.SaveRecord == "是" {
-				err := db.SetTextRecord(f.Url)
-				if err != nil {
-					logs.Errorf(err.Error())
+					if f.SaveRecord == "是" {
+						err := db.SetTextRecord(f.Url)
+						if err != nil {
+							logs.Errorf(err.Error())
+						}
+						logs.Infof("Record text success.")
+					}
+				}(f.HtmlLable)
+			}else {
+				for _,v := range strSlice {
+					//异步，没有顺序
+					go func(htmlLable string) {
+						co.OnHTML(htmlLable, func(e *colly.HTMLElement) {
+							err := auxiliary.AppendWrite(e.Text, f.SaveDataLocal)
+							if err != nil {
+								logs.Errorf(err.Error())
+								return
+							}
+						})
+						err := co.Visit(f.Url)
+						if err != nil {
+							logs.Errorf(err.Error())
+							c.Redirect(http.StatusFound, "/svc/text")
+							return
+						}
+
+						if f.SaveRecord == "是" {
+							err := db.SetTextRecord(f.Url)
+							if err != nil {
+								logs.Errorf(err.Error())
+							}
+							logs.Infof("Record text success.")
+						}
+					}(v)
 				}
-				logs.Infof("Record text success.")
 			}
 
 			c.Redirect(http.StatusFound, "/svc/text")
 			return
 
 		case "MongoDB":
-			co := colly.NewCollector()
-			co.OnHTML("p", func(e *colly.HTMLElement) {
-				//临时把内容保存文件
-				err := auxiliary.AppendWrite(e.Text, f.SaveDataMGTitle+".txt")
-				if err != nil {
-					logs.Errorf(err.Error())
-					return
+			if len(strSlice) == 1 {
+				go func(htmlLable string) {
+					co.OnHTML(htmlLable, func(e *colly.HTMLElement) {
+						//临时把内容保存文件
+						err := auxiliary.AppendWrite(e.Text, f.SaveDataMGTitle+".txt")
+						if err != nil {
+							logs.Errorf(err.Error())
+							return
+						}
+					})
+					err := co.Visit(f.Url)
+					if err != nil {
+						logs.Errorf(err.Error())
+						c.Redirect(http.StatusFound, "/svc/text")
+						return
+					}
+
+					//save mongodb
+					if text.TextWrite(f.SaveDataMGTitle+".txt", f.SaveDataMGTitle) != nil {
+						logs.Errorf(err.Error())
+						return
+					}
+					//del temporary file
+					if auxiliary.DeleteF(f.SaveDataMGTitle+".txt") != nil {
+						logs.Errorf(err.Error())
+						return
+					}
+
+					if f.SaveRecord == "是" {
+						err := db.SetTextRecord(f.Url)
+						if err != nil {
+							logs.Errorf(err.Error())
+						}
+						logs.Infof(f.Url+"  Record text success.")
+					}
+				}(f.HtmlLable)
+			}else {
+				for _,v := range strSlice {
+					go func(htmlLable string) {
+						co.OnHTML(htmlLable, func(e *colly.HTMLElement) {
+							err := auxiliary.AppendWrite(e.Text, f.SaveDataMGTitle+".txt")
+							if err != nil {
+								logs.Errorf(err.Error())
+								return
+							}
+						})
+						err := co.Visit(f.Url)
+						if err != nil {
+							logs.Errorf(err.Error())
+							c.Redirect(http.StatusFound, "/svc/text")
+							return
+						}
+
+						if text.TextWrite(f.SaveDataMGTitle+".txt", f.SaveDataMGTitle) != nil {
+							logs.Errorf(err.Error())
+							return
+						}
+
+						if auxiliary.DeleteF(f.SaveDataMGTitle+".txt") != nil {
+							logs.Errorf(err.Error())
+							return
+						}
+
+						if f.SaveRecord == "是" {
+							err := db.SetTextRecord(f.Url)
+							if err != nil {
+								logs.Errorf(err.Error())
+							}
+							logs.Infof(f.Url+"  Record text success.")
+						}
+					}(v)
 				}
-			})
-			err := co.Visit(f.Url)
-			if err != nil {
-				logs.Errorf(err.Error())
-				c.Redirect(http.StatusFound, "/svc/text")
-				return
 			}
 
-			//save mongodb
-			if text.TextWrite(f.SaveDataMGTitle+".txt", f.SaveDataMGTitle) != nil {
-				logs.Errorf(err.Error())
-				return
-			}
-			//del temporary file
-			if auxiliary.DeleteF(f.SaveDataMGTitle+".txt") != nil {
-				logs.Errorf(err.Error())
-				return
-			}
-
-			if f.SaveRecord == "是" {
-				err := db.SetTextRecord(f.Url)
-				if err != nil {
-					logs.Errorf(err.Error())
-				}
-				logs.Infof("Record text success.")
-			}
 			c.Redirect(http.StatusFound, "/svc/text")
 			return
 
@@ -145,6 +231,23 @@ func DeleteTextRecord(c *gin.Context){
 	}
 	c.Redirect(http.StatusFound, "/svc/text/record")
 	return
+}
+
+
+func DeleteTextContent(c *gin.Context){
+	t := TextCat{
+		TextTitle: c.PostForm("titleName"),
+	}
+	tlList := strings.Fields(t.TextTitle)
+	err := text.TextDeleteContent(tlList[0])
+	if err != nil {
+		logs.Errorf(err.Error())
+		return
+	}
+	logs.Infof(tlList[0]+" content delete success.")
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+	})
 }
 
 
