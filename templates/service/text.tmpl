@@ -39,7 +39,20 @@
 
 
                     <label for="name">html标签筛选
-                        <textarea id="htmlLable" name="htmlLable" rows="2" placeholder="单个就写单个，多个就加逗号分隔如: p,a,div,table"></textarea>
+                        <textarea id="htmlLable" name="htmlLable" rows="2" placeholder="单个标签: p，多个标签: p,a,div,span"></textarea>
+                    </label>
+
+                    <label for="name"  style="width: 20%">主题
+                        <select id="theme" name="theme">
+                            <option>其他</option>
+                            <option>技术</option>
+                            <option>科技</option>
+                            <option>农业</option>
+                            <option>军事</option>
+                            <option>生活</option>
+                            <option>美食</option>
+                            <option>动物</option>
+                        </select>
                     </label>
 
                     <label for="name" style="width: 20%">此次记录是否保存
@@ -49,7 +62,7 @@
                         </select>
                     </label>
                     <button style="float: right;" class="button tiny" type="submit">开始爬取</button>
-                    <a href="/svc/text/mg/content/list"><button style="float: right; margin-right: 10px" class="button tiny" type="button">TEXT列表</button></a>
+                    <a href="/svc/text/mg/content/list"><button style="float: right; margin-right: 10px" class="button tiny" type="button">MONGO列表</button></a>
                     <a href="/svc/text/record"><button style="float: right; margin-right: 10px" class="button tiny success" type="button">查看所有记录</button></a>
                     <button style="float: right;margin-right: 10px" class="button tiny warning" type="button" onclick="checkMongoConn()">检测Mongo</button>
                 </form>
@@ -64,7 +77,6 @@
 
         <script>
             function updateFormVisibility() {
-                // 获取选择框的值
                 var selectedOption = document.getElementById("savenum").value;
 
                 // 隐藏所有表单
@@ -85,10 +97,26 @@
         </script>
 
         <script type="text/javascript">
-            // 基于准备好的dom，初始化echarts实例
             var myChart = echarts.init(document.getElementById('main'));
+            var data = {{.themeMap}}
+            function datacl(d, k) {
+                for (var i in d) {
+                    if (d.hasOwnProperty(k)) {
+                        var value = d[k];
+                        return value
+                    }
+                }
+            }
+            let technology = datacl(data, "技术");
+            let science = datacl(data, "科技");
+            let agriculture = datacl(data, "农业");
+            let military = datacl(data, "军事");
+            let life = datacl(data, "生活");
+            let food = datacl(data, "美食");
+            let animal = datacl(data, "动物");
+            let othen = datacl(data, "其他");
 
-            // 指定图表的配置项和数据
+
             var option = {
                 title: {
                     text: 'Mongo record',
@@ -100,25 +128,37 @@
                         type: 'pie',
                         data: [
                             {
-                                value: 100,
-                                name: 'nginx部署爬取'
+                                value: technology,
+                                name: '技术'
                             },
                             {
-                                value: 200,
-                                name: '二进制部署K8S'
+                                value: science,
+                                name: '科技'
                             },
                             {
-                                value: 200,
-                                name: 'linux常用命令'
+                                value: agriculture,
+                                name: '农业'
                             },
                             {
-                                value: 150,
-                                name: '李白古诗'
+                                value: military,
+                                name: '军事'
                             },
                             {
-                                value: 50,
-                                name: '辛弃疾的词'
-                            }
+                                value: life,
+                                name: '生活'
+                            },
+                            {
+                                value: food,
+                                name: '美食'
+                            },
+                            {
+                                value: animal,
+                                name: '动物'
+                            },
+                            {
+                                value: othen,
+                                name: '其他'
+                            },
                         ],
                         roseType: 'area'
                     }
