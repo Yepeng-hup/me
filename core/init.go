@@ -8,7 +8,7 @@ import (
 	"me/core/logs"
 )
 
-var tableList = []string{"user", "p_text_record"}
+var tableList = []string{"user", "p_text_record", "text_grap_data"}
 
 func checkTableIfCreate()[]string{
 	t := make([]string , 0)
@@ -60,17 +60,28 @@ func CreateMeAllTable(){
 				if err != nil {
 					log.Fatal(err.Error())
 				}
+				logs.Infof("table -> "+v+" create success.")
 			case "p_text_record":
 				createTextRrcordTable := `CREATE TABLE IF NOT EXISTS p_text_record (use_date TEXT DEFAULT (strftime('%Y-%m-%d %H:%M', 'now', 'localtime')), urlName TEXT);`
-				_, err = database.Exec(createTextRrcordTable)
+				_, err := database.Exec(createTextRrcordTable)
 				if err != nil {
 					log.Fatal("ERROR: create table p_text_record fail,", err.Error())
 				}
-				err = db.SetMeUserAndPasswd()
+				logs.Infof("table -> "+v+" create success.")
+			case "text_grap_data":
+				createTextGrapTable := `CREATE TABLE IF NOT EXISTS text_grap_data (use_date TEXT DEFAULT (strftime('%Y-%m-%d %H:%M', 'now', 'localtime')), themeName TEXT);`
+				_, err := database.Exec(createTextGrapTable)
 				if err != nil {
-					log.Fatal(err.Error())
+					log.Fatal("ERROR: create table text_grap_data fail,", err.Error())
 				}
+				logs.Infof("table -> "+v+" create success.")
+
 			default:
+				err := logs.Errorf("not is table -> "+v)
+				if err != nil {
+					log.Println(err)
+					return
+				}
 				return
 			}
 		}
