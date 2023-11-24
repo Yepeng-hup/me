@@ -21,8 +21,7 @@ func TextDeleteContent(fileTitle string) error {
 	//use del
 	rel, err := ct.DeleteOne(context.Background(), filter)
 	if err != nil {
-		return fmt.Errorf("delete mongo db me/text -> [%s] fail.", fileTitle)
+		return fmt.Errorf("delete mongo db me/text -> [%s] fail, mongo num %v", fileTitle, rel.DeletedCount)
 	}
-	fmt.Println(rel.DeletedCount)
 	return nil
 }

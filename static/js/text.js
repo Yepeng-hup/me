@@ -60,3 +60,44 @@ function checkMongoConn() {
         }
     });
 }
+
+
+// function () {
+//
+// }
+
+function deleteTextContent() {
+    let items=document.getElementsByClassName('cb');
+    let len=items.length;
+    for (var i=len-1; i>=0;i--) {
+        let is_checkd = items[i].checked;
+        if (is_checkd) {
+            let divItems = items[i].parentNode.parentNode;
+            let name = divItems.innerText;
+            $.ajax(
+                {
+                    url: "/svc/text/mg/content/del",
+                    type: 'POST',
+                    data: {
+                        "titleName": name,
+                    },
+
+                    success: function(data) {
+                        if (data["code"] === 200){
+                            window.location  = "/svc/text/mg/content/list";
+                            return
+                        }else {
+                            window.location  = "/svc/text/mg/content/list";
+                            return
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                        return
+                    }
+                },
+            );
+        }
+    }
+
+}
