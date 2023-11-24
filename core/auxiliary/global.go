@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -52,6 +53,12 @@ func DeleteD(path string)error{
 		return fmt.Errorf(err.Error())
 	}
 	return nil
+}
+
+
+func StrConvertSlice(str string)[]string{
+	strSlice := strings.Split(str, ",")
+	return strSlice
 }
 
 
