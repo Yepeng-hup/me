@@ -24,3 +24,15 @@ func SetTextRecord(url string)error{
 	}
 	return nil
 }
+
+
+func SetTextTheme(theme string)error{
+	database, err := ConnDb()
+	sql := `INSERT INTO text_grap_data (themeName) VALUES (?);`
+	_, err = database.Exec(sql, theme)
+	if err != nil {
+		return fmt.Errorf("insert data to table[text_grap_data] fail, %s", err.Error())
+	}
+
+	return nil
+}
