@@ -8,3 +8,5 @@ import (
 func ShowVideo(c *gin.Context){
 	c.HTML(http.StatusOK, "video.tmpl", gin.H{})
 }
+
+
